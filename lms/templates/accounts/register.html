@@ -1,0 +1,68 @@
+
+{% extends 'base.html' %}
+
+{% load crispy_forms_tags %}
+{%block tittle%}
+add user
+{%endblock%}
+ {% block content %}
+
+<div class="row">
+   <div class="col-lg-12 col-md-12">
+       <div class="card" style="height: auto;">
+           <div class="card-header">
+               <h4 class="card-title">Add User</h4>
+               <a class="heading-elements-toggle"><i class="la la-ellipsis-v font-medium-3"></i></a>
+               <div class="heading-elements">
+                   <ul class="list-inline mb-0">
+                       <li><button type="button" class="btn btn-glow btn-round btn-bg-gradient-x-red-pink"> All Employees</button></li>
+                   </ul>
+               </div>
+           </div>
+           <div class="card-content collapse show" style="padding: 1rem;">
+            <section class="row" style = "height:2rem">
+                <section class="col col-sm-8 offset-sm-2">
+                    
+                    {% if messages %}
+                    {% for message in messages %}
+                    <div {% if message.tags %} class="{{ message.tags}}" {% endif %} id="message-container">
+                        <h4 style="color: white;">{{ message }}</h4>
+                        {% comment %} <button type="button" class="close" id="override-start" data-dismiss="alert"
+                            aria-label="Close"><span aria-hidden="true">&times;</span>
+                        </button> {% endcomment %}
+                    </div>
+                    {% endfor %}
+                    {% endif %}
+        
+                </section>
+            </section>
+            <section class="form-wrapper">
+
+                <section class="row">
+                    <section class="col-lg-12 col-md-12 col-sm-12 text-center">
+                        <h3 class="title-h3">Add User</h3>
+                        <p>A user must be created before adding as an employee to the system</p>
+                    </section>
+                </section>
+            
+                <section class="row">
+                    <section class="col-lg-12 col-md-12 col-sm-12">
+                        <form action="" method="POST">
+                            {% csrf_token %}
+                            {{form | crispy }}
+                            <button type="submit" class="btn btn-primary btn-lg btn-block">Submit</button>
+                        </form>
+                    </section>
+            
+                </section>
+            
+            </section>
+           </div>
+       </div>
+ </div>
+</div>
+      
+
+
+
+ {% endblock %}

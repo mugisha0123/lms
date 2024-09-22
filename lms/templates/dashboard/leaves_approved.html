@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+{% block tittle %} approved leaves{% endblock %}
+
+
+
+{% block content %}
+<div class="row">
+	<div class="col-lg-12 col-md-12">
+		<div class="card" style="height: auto; padding: 1rem;">
+			<div class="card-header">
+				<h4 class="card-title">All Leaves</h4>
+				<a class="heading-elements-toggle"><i class="la la-ellipsis-v font-medium-3"></i></a>
+				<div class="heading-elements">
+					<ul class="list-inline mb-0">
+						<li><a href="{%url 'dashboard:createleave'%}"><button type="button"
+									class="btn btn-glow btn-round btn-bg-gradient-x-red-pink">Apply for a
+									Leave</button></a></li>
+					</ul>
+				</div>
+			</div>
+			<div class="card-content collapse show">
+				<div class="card-body">
+
+					<section class="row" style = "height:2rem">
+                        <section class="col col-sm-8 offset-sm-2">
+
+							{% if messages %}
+							{% for message in messages %}
+							<div {% if message.tags %} class="{{ message.tags}}" {% endif %} id="message-container">
+								<h4 style="color: white; text-align: center;">{{ message }}</h4>
+								<button type="button" class="close" id="override-start" data-dismiss="alert"
+									aria-label="Close"><span aria-hidden="true">&times;</span>
+								</button>
+							</div>
+							{% endfor %}
+							{% endif %}
+
+                        </section>
+                    </section>
+
+                	<!-- TABLE -->
+                	<div class="table-responsive table-shadow">
+                		<div class="text-center table-description">
+                			<h4 class="title-h3" style="color: #60a0b3 !important;
+    						text-shadow: 1px 0px rgba(0,0,0,0.11)">APPROVED LEAVES</h4>
+                		</div>
+                		<section class="total-leaves-count">
+                			{% if leave_list %}
+                			<p>Total approved leaves - <span>{{ leave_list.count }}</span></p>
+                			{% endif %}
+                		</section>
+                	
+                		<table class="table">
+							  <thead>
+							    <tr>
+							      <!-- <th scope="col">#</th> -->
+							      <th scope="col">User</th>
+							      <th scope="col">Type</th>
+							      <th scope="col">Day(s)</th>
+							      <th scope="col">Status</th>
+							      <th scope="col">Actions</th>
+							    </tr>
+							  </thead>
+							  <tbody>
+							  	{% for leave in leave_list %}
+							    <tr>
+
+							      <td>{{ leave.user }}</td>
+							      <td>{{ leave.leavetype}}</td>
+							      <td>{{ leave.leave_days }}</td>
+							      <td>{{ leave.status }}</td>
+
+							      <td> 
+							      	<a href="{% url 'dashboard:userleaveview' leave.id %}">
+							      	    <span>view</span>
+							      	</a>
+							      	
+							        <a href="{% url 'dashboard:userleaveunapprove' leave.id %}">
+							       	<span>unapprove</span>
+							        </a>
+
+							      </td>
+							    </tr>
+
+							    {% endfor %}
+
+							  </tbody>
+
+						</table>
+			
+					</div>
+                	<!-- /TABLE -->
+
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+{% endblock %}

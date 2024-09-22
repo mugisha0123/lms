@@ -1,0 +1,117 @@
+
+{%extends 'base.html'%}
+        
+
+{% block tittle %} employees {% endblock %}
+
+{% load crispy_forms_tags %}
+
+
+  
+
+ <!--CONTENTS-->
+ {% block content %}
+ <div class="row">
+    <div class="col-lg-12 col-md-12">
+        <div class="card" style="height: auto; padding: 1rem;">
+            <div class="card-header">
+                <h4 class="card-title">Change Password</h4>
+                <a class="heading-elements-toggle"><i class="la la-ellipsis-v font-medium-3"></i></a>
+                <div class="heading-elements">
+                    <ul class="list-inline mb-0">
+                        <li><a href="{%url 'dashboard:dashboard'%}">
+                            <button type="button" class="btn btn-glow btn-round btn-bg-gradient-x-red-pink">Back to Dashboard</button>
+                        </a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="card-content collapse show">
+                <div class="card-body">
+					<section class="row" style = "height:2rem">
+						<section class="col col-sm-8 offset-sm-2">
+					
+							{% if messages %}
+							{% for message in messages %}
+							<div {% if message.tags %} class="{{ message.tags}}" {% endif %} id="message-container">
+								<h4 style="color: white;">{{ message }}</h4>
+								<button type="button" class="close" id="override-start" data-dismiss="alert"
+									aria-label="Close"><span aria-hidden="true">&times;</span>
+								</button>
+							</div>
+							{% endfor %}
+							{% endif %}
+						</section>
+					</section>
+					<!-- <div class="container"> -->
+					<section class="row margin-bottom">
+						<div class="container-fluid">
+						<section class="col-lg-4 col-md-4 col-sm-12">
+							<div class="employee-box sec-box">
+								<a href="">
+								<span>Employees</span>
+								</a>
+								<span class="count-object">{{ all_employees.count }}</span> 
+							</div>
+						</section>
+						
+					
+					</section> 
+					<div class="row">
+						<div class="table-responsive">
+							<div class="table-shadow">
+								<div class="text-center table-description">
+									<h4 class="title-h3">All Employees</h4>
+								</div>
+								<div class="container-fluid">
+									<div class="row">
+										 <div class="download-print-action">
+											  Download Excel | Pdf | Print
+										</div>
+									</div>
+								</div>
+								<table class="table">
+									  <thead>
+										<tr>
+										  <th scope="col">Username</th>
+										  <th scope="col">Employee (fullname) </th>
+										  <th scope="col">Department</th>
+										  <th scope="col">Status</th>
+										  <th scope="col">Actions</th>
+										  <!-- <th scope="col">view</th> -->
+										</tr>
+									  </thead>
+		
+									  <tbody>
+										  {% for emp in employees %}
+										  <tr>
+											  <td>{{emp.user.username}}</td>
+											  <td>{{ emp.get_full_name }}</td>
+											  <td>{{ emp.department }}</td>
+											  {% if emp.user.is_active %}
+											  <td>active</td>
+											  {% else %}
+											  <td>inactive</td>
+											  {% endif %}
+		
+											  {%  if emp.user.is_active and emp.user.is_superuser %}
+											  <!-- Admin cannot block self -->
+											  <td style="font-style:italic;">(admin)</td>
+											  {% elif emp.user.is_active %}
+											  <td><a href="{% url 'accounts:userblock' emp.user.id %}" title="block user"><i class='bx bx-lock-open-alt font-large-1' ></i></a></td>
+											  {% else %}
+											  <td><a href="{% url 'accounts:userunblock' emp.user.id %}" title="unblock user"><i class='bx bx-lock-alt font-large-1' ></i></a></td>
+											  {% endif %}
+											  <!-- <td><a href="{% url 'dashboard:employeeinfo' emp.user.id %}" title="view user"><i class='bx bx-show-alt font-large-1'></i></a></td>    -->
+									  </tr>
+									   {% endfor %}
+									  </tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+                </div>
+            </div>
+        </div>
+  </div>
+ </div>
+ {% endblock %}

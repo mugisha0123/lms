@@ -1,0 +1,130 @@
+
+{%extends 'base.html'%}
+
+
+{% block tittle %} leave details {% endblock %}
+
+{% block content %}
+
+<div class="row">
+  <div class="col-lg-12 col-md-12">
+    <div class="card" style="height: auto; padding: 1rem;">
+     <!-- leave_detail_view.html -->
+<div class="row">  
+  <div class="col-lg-4 text-center">
+      <img src="{{ employee.image.url}}" style="height:200px; width:200px; border-radius:50%;" class="img-fluid rounded-circle-image">
+  </div>
+  <div class="col-lg-8 col-md-12 col-sm-12">
+    
+      <div class="list-group" id="list-tab" role="tablist">
+        <section class="row" style = "height:2rem; z-index: 10;" >
+            <section class="col col-sm-8 offset-sm-2">
+                
+              {% if messages %}
+              {% for message in messages %}
+              <div {% if message.tags %} class="{{ message.tags}}" {% endif %} id="message-container">
+                  <h4 style="color: white; text-align: center;">{{ message }}</h4>
+              </div>
+              {% endfor %}
+              {% endif %}
+        
+            </section>
+        </section>
+          <a class="list-group-item list-group-item-action" id="list-home-list" role="tab" aria-controls="">
+              <span>Employee</span>
+              <div style="font-size: 1.5rem; font-weight: 600;">{{ employee.get_full_name }}</div>
+          </a>
+          <a class="list-group-item list-group-item-action" id="list-profile-list" role="tab" aria-controls="">
+              <span>Start Date</span>
+              <div style="font-size: 1.5rem; font-weight: 600;">{{ leave.startdate }}</div>
+          </a>
+          <a class="list-group-item list-group-item-action" id="list-messages-list" role="tab" aria-controls="">
+              <span>End Date</span>
+              <div style="font-size: 1.5rem; font-weight: 600;">{{ leave.enddate }}</div>
+          </a>
+          <a class="list-group-item list-group-item-action" id="list-settings-list" role="tab" aria-controls="">
+              <span>Duration</span>
+              <div style="font-size: 1.5rem; font-weight: 600;">{{ leave.leave_days }}</div>
+          </a>
+          <a class="list-group-item list-group-item-action" id="list-settings-list" role="tab" aria-controls="">
+              <span>Type</span>
+              <div style="font-size: 1.5rem; font-weight: 600;">{{ leave.leavetype }}</div>
+          </a>
+          <a class="list-group-item list-group-item-action" id="list-settings-list" role="tab" aria-controls="">
+              <span>Reason</span>
+              <div style="font-size: 1.5rem; font-weight: 600;">{{ leave.reason }}</div>
+          </a>
+          <a class="list-group-item list-group-item-action" id="list-settings-list" role="tab" aria-controls="">
+              <span>Status</span>
+              <div style="font-size: 1.5rem; font-weight: 600;">{{ leave.status }}</div>
+          </a>
+      </div>
+
+      <!-- Superuser and admin actions -->
+      {% if request.user.is_staff %}
+      <div class="row">
+          <div class="col col-lg-4 col-sm-12 col-lg-offset-7 text-center">
+              <div class="btn-group btn-group-justified">
+                  {% if leave.leave_approved %}
+                  <a href="{% url 'dashboard:userleaveunapprove' leave.id %}" class="btn btn-primary">UNAPPROVE</a>
+                  {% else %}
+                  <a href="{% url 'dashboard:userleaveapprove' leave.id %}" class="btn btn-primary">APPROVE</a>
+                  {% endif %}
+                  {% comment %} <a href="{% url 'dashboard:userleavecancel' leave.id %}" class="btn btn-info">CANCEL</a> {% endcomment %}
+                  <a href="{%url 'dashboard:reject' leave.id%}" id="show-rejection-reason-btn" class="btn btn-warning">REJECT</a>
+                  <a href="?format=pdf" class="btn btn-secondary">Download PDF</a>
+              </div>
+          </div>
+      </div>
+      {% else %}
+      {% if leave.status == 'cancelled' %}
+      <a href="{% url 'dashboard:dashboard' %}" class="btn btn-info">Back to dashboard</a>
+      {% else %}
+      {% if leave.leave_approved %}
+      <a href="{% url 'dashboard:dashboard' %}" class="btn btn-info">Back to dashboard</a>
+      {% else %}
+      <a href="{% url 'dashboard:userleavecancel' leave.id %}" class="btn btn-danger">CANCEL</a>
+      {%endif%}
+      {% endif %}
+      {% endif %}
+
+  </div>
+</div>
+<span style="font-size: 13px;padding-left: 1rem;" class="pull-left">Created {{ leave.created }}</span>
+
+    
+    </div>
+  </div>
+</div>
+
+{% if request.user.is_staff %}
+<div class="row" id="rejection-reason-container" style="display: none;">
+{% comment %} {%include 'dashboard/rejection_form.html'%} {% endcomment %}
+<form method="POST">
+    {% csrf_token %}
+    <div class="form-group">
+        <label for="rejection_reason">Reason for Rejection:</label>
+        <textarea id="rejection_reason" name="rejection_reason" class="form-control" required></textarea>
+    </div>
+    <!-- Use a proper button to submit the form -->
+    <button type="submit" class="btn btn-danger">Reject Leave</button>
+</form>
+</div>
+{%endif%}
+{% endblock %}
+
+{%block page_scripts%}
+
+
+{% comment %} <script>
+    // JavaScript to toggle the visibility of the rejection reason textarea
+    document.getElementById('show-rejection-reason-btn').addEventListener('click', function() {
+        var rejectionReasonContainer = document.getElementById('rejection-reason-container');
+        if (rejectionReasonContainer.style.display === 'none') {
+            rejectionReasonContainer.style.display = 'block';
+        } else {
+            rejectionReasonContainer.style.display = 'none';
+        }
+    });
+</script> {% endcomment %}
+{%endblock%}
