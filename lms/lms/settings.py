@@ -95,7 +95,16 @@ WSGI_APPLICATION = 'lms.wsgi.application'
 #     }
 # }
 
-# 
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',  
+        'NAME': 'defaultdb',              
+        'USER': 'avnadmin',              
+        'PASSWORD': 'AVNS_R_mhEE7WMicUIqnOuX2',              
+        'HOST': 'pg-34394e68-azariakilasi98-5982.c.aivencloud.com',                      
+        'PORT': '28223',                           
+    }
+}
 
 
 
